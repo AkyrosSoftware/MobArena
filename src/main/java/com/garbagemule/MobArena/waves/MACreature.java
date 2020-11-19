@@ -129,7 +129,7 @@ public class MACreature
 
     public LivingEntity spawn(Arena arena, World world, Location loc) {
         LivingEntity e = (LivingEntity) world.spawnEntity(loc, type);
-        e.getEquipment().clear();
+        // e.getEquipment().clear();
         e.setCanPickupItems(false);
 
         switch (this.name) {
