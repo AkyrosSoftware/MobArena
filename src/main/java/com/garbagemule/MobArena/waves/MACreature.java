@@ -183,6 +183,8 @@ public class MACreature
             case "zombiepigman":
                 ((PigZombie) e).setAngry(true);
                 break;
+            case "husk":
+            case "zombievillager":
             case "zombie":
                 e.getEquipment().clear();
                 break;
