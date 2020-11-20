@@ -129,7 +129,6 @@ public class MACreature
 
     public LivingEntity spawn(Arena arena, World world, Location loc) {
         LivingEntity e = (LivingEntity) world.spawnEntity(loc, type);
-        // e.getEquipment().clear();
         e.setCanPickupItems(false);
 
         switch (this.name) {
@@ -168,10 +167,12 @@ public class MACreature
                 break;
             case "skeleton":
             case "stray":
+                e.getEquipment().clear();
                 e.getEquipment().setItemInMainHand(new ItemStack(Material.BOW, 1));
                 break;
             case "babyzombievillager":
             case "babyzombie":
+                e.getEquipment().clear();
                 ((Zombie) e).setBaby(true);
                 break;
             case "babypigman":
@@ -181,6 +182,9 @@ public class MACreature
             case "pigzombie":
             case "zombiepigman":
                 ((PigZombie) e).setAngry(true);
+                break;
+            case "zombie":
+                e.getEquipment().clear();
                 break;
             case "killerbunny":
                 ((Rabbit) e).setRabbitType(Rabbit.Type.THE_KILLER_BUNNY);
