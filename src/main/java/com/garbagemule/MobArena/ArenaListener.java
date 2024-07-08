@@ -112,7 +112,7 @@ public class ArenaListener
     private boolean protect;
     private boolean monsterExp;
     private boolean monsterInfight;
-    private boolean monsterrTack;
+    private boolean monsterTrack;
     private boolean pvpEnabled;
     private boolean lockFoodLevel;
     private boolean foodRegen;
