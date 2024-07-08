@@ -144,7 +144,7 @@ public class ArenaListener
         this.monsterExp       = s.getBoolean("monster-exp",          false);
         this.monsterInfight   = s.getBoolean("monster-infight",      false);
         this.monsterTrack     = s.getBoolean("monster-tracks-player",false);
-        this.pvpOn            = s.getBoolean("pvp-enabled",          false);
+        this.pvpEnabled       = s.getBoolean("pvp-enabled",          false);
         this.foodRegen        = s.getBoolean("food-regen",           false);
         this.lockFoodLevel    = s.getBoolean("lock-food-level",      true);
         this.allowTeleport    = s.getBoolean("allow-teleporting",    false);
