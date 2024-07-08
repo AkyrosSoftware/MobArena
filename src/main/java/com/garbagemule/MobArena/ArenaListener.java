@@ -45,6 +45,7 @@ import org.bukkit.entity.TNTPrimed;
 import org.bukkit.entity.ThrownPotion;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.Event.Result;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockEvent;
@@ -106,20 +107,20 @@ public class ArenaListener
     private MonsterManager monsters;
     private ClassLimitManager classLimits;
 
-    private boolean softRestore,
-            softRestoreDrops,
-            protect;
-    private boolean monsterExp,
-            monsterInfight,
-            monsterTrack,
-            pvpOn,               // pvp-enabled in config
-            pvpEnabled = false,  // activated on first wave
-            foodRegen,
-            lockFoodLevel,
-            useClassChests;
-    private boolean allowTeleport,
-            canShare,
-            autoIgniteTNT;
+    private boolean softRestore;
+    private boolean softRestoreDrops;
+    private boolean protect;
+    private boolean monsterExp;
+    private boolean monsterInfight;
+    private boolean monsterrTack;
+    private boolean pvpEnabled;
+    private boolean lockFoodLevel;
+    private boolean foodRegen;
+    private boolean useClassChests;
+    private boolean allowTeleport;
+    private boolean monsterTeleport;
+    private boolean canShare;
+    private boolean autoIgniteTNT;
     private int autoIgniteFuse;
 
     private Set<Player> banned;
@@ -147,6 +148,7 @@ public class ArenaListener
         this.foodRegen        = s.getBoolean("food-regen",           false);
         this.lockFoodLevel    = s.getBoolean("lock-food-level",      true);
         this.allowTeleport    = s.getBoolean("allow-teleporting",    false);
+        this.monsterTeleport  = s.getBoolean("monster-teleporting",  false);
         this.canShare         = s.getBoolean("share-items-in-arena", true);
         this.autoIgniteTNT    = s.getBoolean("auto-ignite-tnt",      false);
         this.autoIgniteFuse   = s.getInt("auto-ignite-fuse",         80);
@@ -178,16 +180,6 @@ public class ArenaListener
         );
 
         this.lastKnownPlayerTargets = new HashMap<>();
-    }
-
-    void pvpActivate() {
-        if (arena.isRunning() && !arena.getPlayersInArena().isEmpty()) {
-            pvpEnabled = pvpOn;
-        }
-    }
-
-    void pvpDeactivate() {
-        if (pvpOn) pvpEnabled = false;
     }
 
     public void onBlockBreak(BlockBreakEvent event) {
@@ -747,11 +739,15 @@ public class ArenaListener
                 return;
             }
 
-            // Cancel PvP damage if disabled
-            if (!pvpEnabled && damager instanceof Player && !damager.equals(player)) {
-                event.setCancelled(true);
-                return;
+            // If this is player damage (and not self-inflicted), handle PvP
+            if (damager instanceof Player && !damager.equals(player)) {
+                // PvP must be enabled, and the first wave must have spawned
+                if (!pvpEnabled || arena.getWaveManager().getWaveNumber() == 0) {
+                    event.setCancelled(true);
+                    return;
+                }
             }
+
             event.setCancelled(false);
             arena.getArenaPlayer(player).getStats().add("dmgTaken", event.getDamage());
             // Redirect pet aggro (but not at players)
@@ -830,7 +826,7 @@ public class ArenaListener
                 return;
             }
 
-            if (!pvpEnabled) {
+            if (!pvpEnabled || arena.getWaveManager().getWaveNumber() == 0) {
                 event.setCancelled(true);
             }
         }
@@ -943,6 +939,14 @@ public class ArenaListener
         if (monsters.hasPet(event.getEntity()) && region.contains(event.getTo())) {
             return;
         }
+
+        if (isArenaMonster(event.getEntity())) {
+            if (!monsterTeleport || !region.contains(event.getTo())) {
+                event.setCancelled(true);
+            }
+            return;
+        }
+
         if (region.contains(event.getFrom()) || region.contains(event.getTo())) {
             event.setCancelled(true);
         }
@@ -956,7 +960,7 @@ public class ArenaListener
 
         if (potion.getShooter() instanceof Player) {
             // Check for PvP stuff if the shooter is a player
-            if (!pvpEnabled) {
+            if (!pvpEnabled || arena.getWaveManager().getWaveNumber() == 0) {
                 // If a potion has harmful effects, remove all players.
                 for (PotionEffect effect : potion.getEffects()) {
                     PotionEffectType type = effect.getType();
@@ -1133,17 +1137,21 @@ public class ArenaListener
     }
 
     public void onPlayerInteract(PlayerInteractEvent event) {
-        Player p = event.getPlayer();
-        if (!arena.inLobby(p)) return;
+        if (arena.inLobby(event.getPlayer())) {
+            onLobbyPlayerInteract(event);
+        } else {
+            onNonLobbyPlayerInteract(event);
+        }
+    }
 
-        // Prevent placing blocks and using held items
+    private void onLobbyPlayerInteract(PlayerInteractEvent event) {
         if (event.hasItem()) {
             event.setUseItemInHand(Result.DENY);
         }
 
-        // Bail if off-hand or if there's no block involved.
-        if (event.getHand() == EquipmentSlot.OFF_HAND || !event.hasBlock())
+        if (event.getHand() == EquipmentSlot.OFF_HAND) {
             return;
+        }
 
         // Ready block(s)
         if (readyBlocks.contains(event.getClickedBlock().getType().name().toLowerCase()))
@@ -1152,7 +1160,30 @@ public class ArenaListener
         // Sign
         else if (event.getClickedBlock().getState() instanceof Sign) {
             Sign sign = (Sign) event.getClickedBlock().getState();
-            handleSign(sign, p);
+            handleSign(sign, event.getPlayer());
+        }
+    }
+
+    private void onNonLobbyPlayerInteract(PlayerInteractEvent event) {
+        if (!protect) {
+            return;
+        }
+
+        Block block = event.getClickedBlock();
+        if (block == null) {
+            return;
+        }
+        if (!region.contains(block.getLocation())) {
+            return;
+        }
+        if (arena.inEditMode()) {
+            return;
+        }
+
+        if (block.getState() instanceof Sign) {
+            if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                event.setCancelled(true);
+            }
         }
     }
 

@@ -4,12 +4,9 @@
 # Java
 *.class
 
-# Maven
-target/
-
-# Artifacts
-*.jar
-*.zip
+# Gradle
+.gradle/
+build/
 
 # IntelliJ
 .idea/

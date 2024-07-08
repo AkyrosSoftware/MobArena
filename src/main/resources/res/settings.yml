@@ -16,6 +16,7 @@ pvp-enabled: false
 monster-infight: false
 monster-tracks-player: false
 allow-teleporting: false
+monster-teleporting: false
 spectate-on-death: true
 auto-leave-on-end: false
 share-items-in-arena: true
