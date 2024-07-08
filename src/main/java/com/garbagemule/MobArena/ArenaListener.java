@@ -1155,7 +1155,7 @@ public class ArenaListener
 
         // Ready block(s)
         if (readyBlocks.contains(event.getClickedBlock().getType().name().toLowerCase()))
-            handleReadyBlock(p);
+            handleReadyBlock(event.getPlayer());
 
         // Sign
         else if (event.getClickedBlock().getState() instanceof Sign) {
