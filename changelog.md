@@ -12,6 +12,20 @@ These changes will (most likely) be included in the next version.
 
 ## [Unreleased]
 
+## [0.108] - 2024-01-01
+### Added
+- Support for chest references in item syntax. The new `inv` syntax allows for referencing container indices in the config-file. This should help bridge the gap between class chests and various other parts of the config-file, such as rewards and upgrade waves.
+- Support for saved items. The new `/ma save-item` command can be used to save the currently held item to disk, which allows it to be used in various places in the config-file. This should help bridge the gap between the config-file and class chests for config-file centric setups.
+- New per-arena setting `monster-teleporting` allows monsters to teleport _inside_ the arena region. This should allow for stuff like `/tp` commands and for Endermen to "do their thing".
+- New permission `mobarena.admin.errors` for better error visibility. Players with this permission will get a message if an arena encounters an error. Currently, the only such error is the one resulting from Spigot's "max max health" setting throwing an exception when monster health is set "too high".
+
+### Fixed
+- Explosion damage caused by Exploding Sheep now correctly counts as monster damage. This means that the explosions only affect other mobs if the per-arena setting `monster-infight` is set to `true`.
+- Explosion damage caused by the boss ability `obsidian-bomb` now correctly counts as monster damage. This means that the explosions only affect other mobs if the per-arena setting `monster-infight` is set to `true`.
+- An old discrepancy with auto start timers in the auto-ready logic has been removed. This fixes an issue in MobArenaStats where the extension would throw errors in arenas with `auto-ready: true` and a non-zero auto start timer. Note that the combination of `auto-ready: true` and a `default-class` now _requires_ the use of a `start-delay-timer` to prevent the arena from starting immediately when the first player joins.
+- Signs in arena regions, as well as Arena Signs anywhere, can no longer be edited by right-clicking.
+- Signs now correctly restore themselves again in arenas with `soft-restore: true`.
+
 ## [0.107] - 2022-07-30
 ### Added
 - New monster variant `angry-bees` can be used to spawn angry bees.
@@ -247,7 +261,8 @@ Thanks to:
 - Swatacular for help with testing bug fixes
 - Haileykins for contributions to the code base
 
-[Unreleased]: https://github.com/garbagemule/MobArena/compare/0.107...HEAD
+[Unreleased]: https://github.com/garbagemule/MobArena/compare/0.108...HEAD
+[0.108]: https://github.com/garbagemule/MobArena/compare/0.107...0.108
 [0.107]: https://github.com/garbagemule/MobArena/compare/0.106...0.107
 [0.106]: https://github.com/garbagemule/MobArena/compare/0.105...0.106
 [0.105]: https://github.com/garbagemule/MobArena/compare/0.104.2...0.105
