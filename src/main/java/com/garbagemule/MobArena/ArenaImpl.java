@@ -1394,12 +1394,12 @@ public class ArenaImpl implements Arena
                 }
 
                 switch (e.getType()) {
-                    case DROPPED_ITEM:
+                    case ITEM:
                     case EXPERIENCE_ORB:
                     case ARROW:
                     case MINECART:
                     case BOAT:
-                    case PRIMED_TNT:
+                    case TNT:
                     case SHULKER_BULLET:
                         e.remove();
                 }
