@@ -54,6 +54,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static org.bukkit.ExplosionResult.KEEP;
+
+
+
 /**
  * The point of this class is to simply redirect all events to each arena's
  * own listener(s).
@@ -202,7 +206,7 @@ public class MAGlobalListener implements Listener
         List<Block> blocks = new ArrayList<>(event.blockList());
 
         // Account for Spigot's messy extra event
-        EntityExplodeEvent fake = new EntityExplodeEvent(null, event.getBlock().getLocation(), blocks, event.getYield());
+        EntityExplodeEvent fake = new EntityExplodeEvent(null, event.getBlock().getLocation(), blocks, event.getYield(), KEEP);
         fake.setCancelled(event.isCancelled());
         entityExplode(fake);
 
