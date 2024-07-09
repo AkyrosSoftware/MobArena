@@ -33,8 +33,8 @@ public class RootTarget implements Ability
             return;
 
         Player player = (Player) target;
-        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, DURATION, AMPLIFIER));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, DURATION, AMPLIFIER));
         player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING, DURATION, AMPLIFIER));
-        player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, DURATION, -AMPLIFIER));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, DURATION, -AMPLIFIER));
     }
 }
