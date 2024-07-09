@@ -964,7 +964,7 @@ public class ArenaListener
                 // If a potion has harmful effects, remove all players.
                 for (PotionEffect effect : potion.getEffects()) {
                     PotionEffectType type = effect.getType();
-                    if (type.equals(PotionEffectType.HARM) || type.equals(PotionEffectType.POISON)) {
+                    if (type.equals(PotionEffectType.INSTANT_DAMAGE) || type.equals(PotionEffectType.POISON)) {
                         for (LivingEntity le : event.getAffectedEntities()) {
                             if (le instanceof Player) {
                                 event.setIntensity(le, 0.0);
@@ -978,7 +978,7 @@ public class ArenaListener
             // Otherwise, check for monster infighting
             for (PotionEffect effect : potion.getEffects()) {
                 PotionEffectType type = effect.getType();
-                if (type.equals(PotionEffectType.HARM) || type.equals(PotionEffectType.POISON)) {
+                if (type.equals(PotionEffectType.INSTANT_DAMAGE) || type.equals(PotionEffectType.POISON)) {
                     for (LivingEntity le : event.getAffectedEntities()) {
                         if (!(le instanceof Player)) {
                             event.setIntensity(le, 0.0);
