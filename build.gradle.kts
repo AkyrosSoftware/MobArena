@@ -1,6 +1,5 @@
 plugins {
     id("java-library")
-    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "com.garbagemule"
@@ -16,7 +15,6 @@ repositories {
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.19-R0.1-SNAPSHOT")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
-    api("org.bstats:bstats-bukkit:2.2.1")
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.hamcrest:hamcrest-all:1.3")
@@ -53,8 +51,6 @@ tasks {
 
     shadowJar {
         minimize()
-
-        relocate("org.bstats", "com.garbagemule.MobArena.metrics")
 
         archiveBaseName = "MobArena"
         archiveClassifier = ""

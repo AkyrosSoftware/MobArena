@@ -10,14 +10,6 @@ import com.garbagemule.MobArena.framework.Arena;
 import com.garbagemule.MobArena.framework.ArenaMaster;
 import com.garbagemule.MobArena.items.SavedItemsManager;
 import com.garbagemule.MobArena.listeners.MAGlobalListener;
-import com.garbagemule.MobArena.metrics.ArenaCountChart;
-import com.garbagemule.MobArena.metrics.ClassChestsChart;
-import com.garbagemule.MobArena.metrics.ClassCountChart;
-import com.garbagemule.MobArena.metrics.FoodRegenChart;
-import com.garbagemule.MobArena.metrics.IsolatedChatChart;
-import com.garbagemule.MobArena.metrics.MonsterInfightChart;
-import com.garbagemule.MobArena.metrics.PvpEnabledChart;
-import com.garbagemule.MobArena.metrics.VaultChart;
 import com.garbagemule.MobArena.signs.SignBootstrap;
 import com.garbagemule.MobArena.signs.SignListeners;
 import com.garbagemule.MobArena.things.NothingPickerParser;
@@ -28,7 +20,6 @@ import com.garbagemule.MobArena.things.ThingPickerManager;
 import com.garbagemule.MobArena.util.config.ConfigUtils;
 import com.garbagemule.MobArena.waves.ability.AbilityManager;
 import net.milkbowl.vault.economy.Economy;
-import org.bstats.bukkit.Metrics;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -116,7 +107,6 @@ public class MobArena extends JavaPlugin
             setupVault();
             setupBossAbilities();
             setupListeners();
-            setupMetrics();
         } catch (RuntimeException e) {
             setLastFailureCauseAndRethrow(e);
         }
@@ -176,18 +166,6 @@ public class MobArena extends JavaPlugin
     private void setupListeners() {
         PluginManager pm = this.getServer().getPluginManager();
         pm.registerEvents(new MAGlobalListener(this, arenaMaster), this);
-    }
-
-    private void setupMetrics() {
-        Metrics metrics = new Metrics(this, 2572);
-        metrics.addCustomChart(new VaultChart(this));
-        metrics.addCustomChart(new ArenaCountChart(this));
-        metrics.addCustomChart(new ClassCountChart(this));
-        metrics.addCustomChart(new ClassChestsChart(this));
-        metrics.addCustomChart(new FoodRegenChart(this));
-        metrics.addCustomChart(new IsolatedChatChart(this));
-        metrics.addCustomChart(new MonsterInfightChart(this));
-        metrics.addCustomChart(new PvpEnabledChart(this));
     }
 
     public void reload() {
